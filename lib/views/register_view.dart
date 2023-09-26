@@ -30,13 +30,81 @@ class _RegisterViewState extends State<RegisterView> {
   void dispose() {
     // TODO: implement dispose
     _email.dispose();
-    _password.dispose(); 
+    _password.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Register'),
+      ),
+      body: Column(
+        children: [
+          TextField(
+            controller: _email,
+            obscureText: false,
+            enableSuggestions: true,
+            autocorrect: false,
+            //  keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration(
+              hintText: 'Enter Your Email Address Here',
+            ),
+          ),
+          TextField(
+            controller: _password,
+            obscureText: true,
+            // enableSuggestions: true ,
+            autocorrect: false,
+            decoration: const InputDecoration(
+              hintText: 'Enter Your Password Here',
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              final email = _email.text;
+              final password = _password.text;
+
+              try {
+                final userCredentials =
+                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
+                //  print(userCredentials);
+              } on FirebaseAuthException catch (e) {
+                if (e.code == 'user-not-found') {
+                  print('User not found');
+                } else if (e.code == 'weak-password') {
+                  print('Weak Password');
+                } else if (e.code == 'email-already-in-use') {
+                  print('Email is already in use. try a different one');
+                } else if (e.code == 'invalid-email') {
+                  print('Invalid email is entered!');
+                }
+
+                // print('Something bad happened');
+                // print(e.runtimeType);
+                // print(e);
+              }
+            },
+            child: const Text('Register'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/login/', 
+                  (route) => false);
+            },
+            child: const Text('Already register? Login here'),
+          )
+        ],
+      ),
+    );
+
+    /* return Scaffold(
       appBar: AppBar(
         title: const Text('flutter firebase testing'),
       ),
@@ -47,66 +115,12 @@ class _RegisterViewState extends State<RegisterView> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              return Column(
-                children: [
-                  TextField(
-                     controller: _email,
-                    obscureText: false,
-                    enableSuggestions: true,
-                    autocorrect: false,
-                    //  keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter Your Email Address Here',
-                    ),
-                  ),
-                  TextField(
-                    controller: _password,
-                    obscureText: true,
-                    // enableSuggestions: true ,
-                    autocorrect: false,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter Your Password Here',
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      final email = _email.text;
-                      final password = _password.text;
-
-                      try {
-                        final userCredentials = await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                          email: email,
-                          password: password,
-                        );
-                        //  print(userCredentials);
-                      } on FirebaseAuthException catch (e) {
-                        if(e.code == 'user-not-found'){
-                          print('User not found');
-                        }
-                        else if(e.code == 'weak-password'){
-                          print('Weak Password');
-                        }
-                        else if(e.code == 'email-already-in-use'){
-                          print('Email is already in use. try a different one');
-                        }
-                        else if(e.code == 'invalid-email'){
-                          print('Invalid email is entered!');
-                        }
-                       // print('Something bad happened');
-                       // print(e.runtimeType);
-                       // print(e); 
-                      }
-                    },
-                    child: const Text('Register'),
-                  ),
-                ],
-              );
-            default:
+                        default:
               return const Text('Please wait. Your View is Loading.....');
           }
         },
       ),
     );
+    */
   }
 }

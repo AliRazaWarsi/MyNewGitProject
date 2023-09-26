@@ -37,6 +37,68 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text('Register View')),
+      body: Column(
+        children: [
+          TextField(
+            controller: _email,
+            obscureText: false,
+            enableSuggestions: true,
+            autocorrect: false,
+            //  keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration(
+              hintText: 'Enter Your Email Address Here',
+            ),
+          ),
+          TextField(
+            controller: _password,
+            obscureText: true,
+            // enableSuggestions: true ,
+            autocorrect: false,
+            decoration: const InputDecoration(
+              hintText: 'Enter Your Password Here.',
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              final email = _email.text;
+              final password = _password.text;
+        
+              try {
+                final userCredentials =
+                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
+                //  print(userCredentials);
+              } on FirebaseAuthException catch (e) {
+                if (e.code == 'user-not-found') {
+                  print('User not found');
+                } else if (e.code == 'weak-password') {
+                  print('Weak Password');
+                } else if (e.code == 'email-already-in-use') {
+                  print('Email is already in use. try a different one');
+                } else if (e.code == 'invalid-email') {
+                  print('Invalid email is entered!');
+                }
+                // print('Something bad happened');
+                // print(e.runtimeType);
+                // print(e);
+              }
+            },
+            child: const Text('Login'),
+          ),
+          TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/register/', (route) => false);
+              },
+              child: const Text('Not registered yet? Register here')),
+        ],
+      ),
+    );
+
+    /* return  Scaffold(
       appBar: AppBar(
         title: const Text('flutter firebase testing'),
       ),
@@ -47,48 +109,12 @@ class _LoginViewState extends State<LoginView> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              return Column(
-                children: [
-                  TextField(
-                    controller: _email,
-                    obscureText: false,
-                    enableSuggestions: true,
-                    autocorrect: false,
-                    //  keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter Your Email Address Here',
-                    ),
-                  ),
-                  TextField(
-                    controller: _password,
-                    obscureText: true,
-                    // enableSuggestions: true ,
-                    autocorrect: false,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter Your Password Here',
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      final email = _email.text;
-                      final password = _password.text;
-
-                      final userCredentials = await FirebaseAuth.instance
-                          .signInWithEmailAndPassword(
-                        email: email,
-                        password: password,
-                      );
-                      print(userCredentials);
-                    },
-                    child: const Text('Login'),
-                  ),
-                ],
-              );
-            default:
+                         default:
               return const Text('Please wait. Your View is Loading.....');
           }
         },
       ),
     );
+  */
   }
 }
