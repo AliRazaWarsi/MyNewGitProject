@@ -37,7 +37,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register View')),
+      appBar: AppBar(title: const Text('Login View')),
       body: Column(
         children: [
           TextField(
@@ -63,10 +63,10 @@ class _LoginViewState extends State<LoginView> {
             onPressed: () async {
               final email = _email.text;
               final password = _password.text;
-        
+
               try {
-                final userCredentials =
-                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                //  final userCredentials =
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
                   email: email,
                   password: password,
                 );
