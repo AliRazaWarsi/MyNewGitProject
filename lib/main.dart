@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_application_testingfirebase/routes.dart';
 import 'package:flutter_application_testingfirebase/views/login_view.dart';
 import 'package:flutter_application_testingfirebase/views/register_view.dart';
 import 'package:flutter_application_testingfirebase/views/verify_email_view.dart';
@@ -16,9 +17,9 @@ void main() {
         // home: const RegisterView(),
         home: const HomePage(),
         routes: {
-          '/login/': (context) => const LoginView(),
-          '/register/': (context) => const RegisterView(),
-          '/notes/': (context) => const NotesView(),
+          loginRoute: (context) => const LoginView(),
+          registerRoute: (context) => const RegisterView(),
+          notesRoute: (context) => const NotesView(),
         }
         //home: RegisterView(),
         //home: const RegisterView(),
@@ -52,7 +53,8 @@ class HomePage extends StatelessWidget {
                   //print('Email is verified.');
                 } else {
                   print(user);
-                  return const NotesView();
+                  return const VerifyEmailView();
+                  // return const NotesView();
                 }
               } else {
                 return const LoginView();
@@ -85,14 +87,14 @@ class _NotesViewState extends State<NotesView> {
         actions: [
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
-              //  devtools.log(value.toString());
+              devtools.log(value.toString());
               switch (value) {
                 case MenuAction.logout:
                   final shouldLogout = await showLogOutDialog(context);
                   if (shouldLogout) {
                     await FirebaseAuth.instance.signOut();
                     Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/login/',
+                      loginRoute,
                       (_) => false,
                     );
                   }
@@ -123,7 +125,7 @@ Future<bool> showLogOutDialog(BuildContext context) {
     builder: (builder) {
       return AlertDialog(
         title: const Text('Log out'),
-        content: const Text('Are you sure to sign out?'),
+        content: const Text('Are you sure you want to log out?'),
         actions: [
           TextButton(
               onPressed: () {
