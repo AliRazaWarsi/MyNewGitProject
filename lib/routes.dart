@@ -1,3 +1,3 @@
 const loginRoute = '/login/';
-const registerRoute = '/login/';
-const notesRoute = '/login/';
+const registerRoute = '/register/';
+const notesRoute = '/notes/';

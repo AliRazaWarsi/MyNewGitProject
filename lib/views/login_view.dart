@@ -66,25 +66,38 @@ class _LoginViewState extends State<LoginView> {
               final password = _password.text;
 
               try {
-                final userCredentials =
-                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                //  final userCredentials =
+                await FirebaseAuth.instance.signInWithEmailAndPassword(
                   email: email,
                   password: password,
                 );
                 Navigator.of(context)
                     .pushNamedAndRemoveUntil(notesRoute, (route) => false);
-                devtools.log(userCredentials.toString());
+                //  devtools.log(userCredentials.toString());
                 //  print(userCredentials);
               } on FirebaseAuthException catch (e) {
-                if (e.code == 'user-not-found') {
-                  devtools.log('User not found');
-                } else if (e.code == 'weak-password') {
-                  devtools.log('Weak Password');
-                } else if (e.code == 'email-already-in-use') {
-                  devtools.log('Email is already in use. try a different one');
-                } else if (e.code == 'invalid-email') {
-                  devtools.log('Invalid email is entered!');
+                // print(e);
+                if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
+                  await showErrorDialog(context, 'User not Found');
+                  // devtools.log('User not found');
+                } else if (e.code == 'wrong-password') {
+                  await showErrorDialog(context, 'wrong credentials');
+                  // devtools.log('Weak Password');
+                } else {
+                  await showErrorDialog(context, 'Error: ${e.code}');
                 }
+              }
+              catch (e){
+                await showErrorDialog(context, e.toString(),);
+
+                // else if (e.code == 'weak-password') {
+                //   devtools.log('Weak Password');
+                // } else if (e.code == 'email-already-in-use') {
+                //   devtools.log('Email is already in use. try a different one');
+                // } else if (e.code == 'invalid-email') {
+                //   devtools.log('Invalid email is entered!');
+                // }
+
                 // print('Something bad happened');
                 // print(e.runtimeType);
                 // print(e);
@@ -121,4 +134,26 @@ class _LoginViewState extends State<LoginView> {
     );
   */
   }
+}
+
+Future<void> showErrorDialog(
+  BuildContext context,
+  String text,
+) {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('An error occurred'),
+          content: Text(text),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Ok'),
+            ),
+          ],
+        );
+      });
 }
