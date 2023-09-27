@@ -20,6 +20,7 @@ void main() {
           loginRoute: (context) => const LoginView(),
           registerRoute: (context) => const RegisterView(),
           notesRoute: (context) => const NotesView(),
+          verifyEmailRoute: (context) => const VerifyEmailView(),
         }
         //home: RegisterView(),
         //home: const RegisterView(),
@@ -37,6 +38,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(' Home'),
       ),
+      // future builder is used to perform the asychronous functions and based on that function, it will update the UI of the app.
       body: FutureBuilder(
         future: Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
@@ -49,6 +51,7 @@ class HomePage extends StatelessWidget {
               if (user != null) {
                 if (user.emailVerified) {
                   print('hello world');
+
                   return const NotesView();
                   //print('Email is verified.');
                 } else {
@@ -85,14 +88,17 @@ class _NotesViewState extends State<NotesView> {
       appBar: AppBar(
         title: const Text('Main UI'),
         actions: [
+
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
               //   devtools.log(value.toString());
               switch (value) {
                 case MenuAction.logout:
+
                   final shouldLogout = await showLogOutDialog(context);
                   // print(shouldLogout);
                   if (shouldLogout) {
+
                     await FirebaseAuth.instance.signOut();
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       loginRoute,
@@ -115,7 +121,23 @@ class _NotesViewState extends State<NotesView> {
           )
         ],
       ),
-      body: const Text('Hello world'),
+      body: Container(
+          width: 150,
+          height: 150,
+          alignment: Alignment.center,
+          padding: EdgeInsets.all(10),
+          margin: const EdgeInsets.fromLTRB(50, 150, 50, 50),
+          decoration: const BoxDecoration(
+            color: Colors.red,
+          ),
+          child: const Text(
+            'Hello world',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          )),
     );
   }
 }
@@ -143,6 +165,8 @@ Future<bool> showLogOutDialog(BuildContext context) {
     },
   ).then((value) => value ?? false);
 }
+
+
 
 /* class VerifyEmailView extends StatelessWidget {
   const VerifyEmailView({super.key});

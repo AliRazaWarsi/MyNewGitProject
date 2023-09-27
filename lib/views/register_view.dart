@@ -3,7 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_testingfirebase/routes.dart';
-import 'dart:developer' as devtools show log;
+import 'package:flutter_application_testingfirebase/views/login_view.dart';
+//import 'dart:developer' as devtools show log;
 import '../firebase_options.dart';
 
 class RegisterView extends StatefulWidget {
@@ -68,27 +69,53 @@ class _RegisterViewState extends State<RegisterView> {
               final password = _password.text;
 
               try {
-                final userCredentials =
-                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                //   final userCredentials =
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
                   email: email,
                   password: password,
                 );
-                devtools.log(userCredentials.toString());
+                //
+                //
+                final user = FirebaseAuth.instance.currentUser;
+                await user?.sendEmailVerification();
+                Navigator.of(context).pushNamed(verifyEmailRoute);
+                //  devtools.log(userCredentials.toString());
                 //  print(userCredentials);
               } on FirebaseAuthException catch (e) {
-                if (e.code == 'user-not-found') {
+                /*   if (e.code == 'user-not-found') {
                   devtools.log('User not found');
-                } else if (e.code == 'weak-password') {
-                  devtools.log('Weak Password');
+                }
+                */
+                if (e.code == 'weak-password') {
+                  await showErrorDialog(
+                    context,
+                    'weak password entered',
+                  );
+                  //devtools.log('Weak Password');
                 } else if (e.code == 'email-already-in-use') {
-                  devtools.log('Email is already in use. try a different one');
+                  await showErrorDialog(
+                    context,
+                    'Email is already in use. try a different one',
+                  );
+                  //devtools.log('Email is already in use. try a different one');
                 } else if (e.code == 'invalid-email') {
-                  devtools.log('Invalid email is entered!');
+                  await showErrorDialog(
+                    context,
+                    'Invalid email is entered here!',
+                  );
+                  //devtools.log('Invalid email is entered!');
+                } else {
+                  await showErrorDialog(
+                    context,
+                    'Error ${e.code}',
+                  );
                 }
 
                 // print('Something bad happened');
                 // print(e.runtimeType);
                 // print(e);
+              } catch (e) {
+                await showErrorDialog(context, e.toString());
               }
             },
             child: const Text('Register'),
@@ -98,7 +125,7 @@ class _RegisterViewState extends State<RegisterView> {
               Navigator.of(context)
                   .pushNamedAndRemoveUntil(loginRoute, (route) => false);
             },
-            child: const Text('Already register? Login here'),
+            child: const Text('Already registered? Login here'),
           )
         ],
       ),
