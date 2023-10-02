@@ -10,13 +10,13 @@ class VerifyEmailView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Verify Email"),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context).pop(context);
-              },
-              icon: const Icon(Icons.arrow_back)),
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {
+        //         Navigator.of(context).pop();
+        //       },
+        //       icon: const Icon(Icons.arrow_back)),
+        // ],
       ),
       body: Column(children: [
         const Text(

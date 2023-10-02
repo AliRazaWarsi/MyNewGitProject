@@ -71,8 +71,18 @@ class _LoginViewState extends State<LoginView> {
                   email: email,
                   password: password,
                 );
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil(notesRoute, (route) => false);
+                final user = FirebaseAuth.instance.currentUser;
+                if (user?.emailVerified ?? false) {
+                  //user email is verified
+
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil(notesRoute, (route) => false);
+                } else {
+                  //user email is not verified
+
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      verifyEmailRoute, (route) => false);
+                }
                 //  devtools.log(userCredentials.toString());
                 //  print(userCredentials);
               } on FirebaseAuthException catch (e) {
@@ -86,9 +96,11 @@ class _LoginViewState extends State<LoginView> {
                 } else {
                   await showErrorDialog(context, 'Error: ${e.code}');
                 }
-              }
-              catch (e){
-                await showErrorDialog(context, e.toString(),);
+              } catch (e) {
+                await showErrorDialog(
+                  context,
+                  e.toString(),
+                );
 
                 // else if (e.code == 'weak-password') {
                 //   devtools.log('Weak Password');

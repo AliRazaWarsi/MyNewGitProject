@@ -88,17 +88,14 @@ class _NotesViewState extends State<NotesView> {
       appBar: AppBar(
         title: const Text('Main UI'),
         actions: [
-
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
               //   devtools.log(value.toString());
               switch (value) {
                 case MenuAction.logout:
-
                   final shouldLogout = await showLogOutDialog(context);
                   // print(shouldLogout);
                   if (shouldLogout) {
-
                     await FirebaseAuth.instance.signOut();
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       loginRoute,
