@@ -8,7 +8,7 @@ import 'package:flutter_application_testingfirebase/views/notes_view.dart';
 import 'package:flutter_application_testingfirebase/views/register_view.dart';
 import 'package:flutter_application_testingfirebase/views/verify_email_view.dart';
 //import 'firebase_options.dart';
-import 'dart:developer' as devtools show log;
+//import 'dart:developer' as devtools show log;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized;
