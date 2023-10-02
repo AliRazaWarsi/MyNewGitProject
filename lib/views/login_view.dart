@@ -1,10 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_testingfirebase/routes.dart';
+import 'package:flutter_application_testingfirebase/services/auth/auth_exceptions.dart';
+import 'package:flutter_application_testingfirebase/services/auth/auth_service.dart';
 import 'dart:developer' as devtools show log;
-import '../firebase_options.dart';
+//import '../firebase_options.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -66,13 +68,15 @@ class _LoginViewState extends State<LoginView> {
               final password = _password.text;
 
               try {
+                await AuthService.firebase()
+                    .logIn(email: email, password: password);
                 //  final userCredentials =
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
-                  email: email,
-                  password: password,
-                );
-                final user = FirebaseAuth.instance.currentUser;
-                if (user?.emailVerified ?? false) {
+                //    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                //     email: email,
+                //     password: password,
+                //   );
+                final user = AuthService.firebase().currentUser;
+                if (user?.isEmailVerified ?? false) {
                   //user email is verified
 
                   Navigator.of(context)
@@ -85,34 +89,12 @@ class _LoginViewState extends State<LoginView> {
                 }
                 //  devtools.log(userCredentials.toString());
                 //  print(userCredentials);
-              } on FirebaseAuthException catch (e) {
-                // print(e);
-                if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
-                  await showErrorDialog(context, 'User not Found');
-                  // devtools.log('User not found');
-                } else if (e.code == 'wrong-password') {
-                  await showErrorDialog(context, 'wrong credentials');
-                  // devtools.log('Weak Password');
-                } else {
-                  await showErrorDialog(context, 'Error: ${e.code}');
-                }
-              } catch (e) {
-                await showErrorDialog(
-                  context,
-                  e.toString(),
-                );
-
-                // else if (e.code == 'weak-password') {
-                //   devtools.log('Weak Password');
-                // } else if (e.code == 'email-already-in-use') {
-                //   devtools.log('Email is already in use. try a different one');
-                // } else if (e.code == 'invalid-email') {
-                //   devtools.log('Invalid email is entered!');
-                // }
-
-                // print('Something bad happened');
-                // print(e.runtimeType);
-                // print(e);
+              } on UserNotFoundAuthException {
+                await showErrorDialog(context, 'User not Found');
+              } on WrongPasswordAuthException {
+                await showErrorDialog(context, 'wrong credentials');
+              } on GenericAuthException {
+                await showErrorDialog(context, 'Authentication Error');
               }
             },
             child: const Text('Login'),
