@@ -64,7 +64,7 @@ void main() {
       final user = provider.currentUser;
       expect(user, isNotNull);
       expect(user!.isEmailVerified, true);
-    }); 
+    });
 
     test('should be able to log out and log in again', () async {
       await provider.logOut();
@@ -116,7 +116,9 @@ class MockAuthProvider implements AuthProvider {
     if (!IsInitialized) throw NotInitializedException();
     if (email == 'foo@bar.com') throw UserNotFoundAuthException();
     if (password == 'foobar') throw WrongPasswordAuthException();
-    const user = AuthUser(isEmailVerified: false);
+
+    //added email parameter here
+    const user = AuthUser(isEmailVerified: false, email: '');
     _user = user;
     return Future.value(user);
   }
@@ -133,7 +135,9 @@ class MockAuthProvider implements AuthProvider {
   Future<void> sendEmailVerification() async {
     if (!IsInitialized) throw NotInitializedException();
     if (_user == null) throw UserNotFoundAuthException();
-    const newUser = AuthUser(isEmailVerified: true);
+
+    //added email parameter here
+    const newUser = AuthUser(isEmailVerified: true, email: '');
     _user = newUser;
   }
 }
