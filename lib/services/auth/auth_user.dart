@@ -17,6 +17,6 @@ class AuthUser {
 
 //added email parameter here
   void testing() {
-    AuthUser(isEmailVerified: true, email: '');
+    AuthUser(isEmailVerified: true, email: 'foo@bar.com');
   }
 }

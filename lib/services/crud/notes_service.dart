@@ -204,7 +204,7 @@ class NotesService {
       throw CouldNotDeleteUser();
     }
   }
-
+  
   Database _getDatabaseOrThrow() {
     final db = _db;
 

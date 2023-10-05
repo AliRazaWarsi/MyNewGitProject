@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_testingfirebase/routes.dart';
 import 'package:flutter_application_testingfirebase/services/auth/auth_service.dart';
 import 'package:flutter_application_testingfirebase/views/login_view.dart';
-import 'package:flutter_application_testingfirebase/views/notes_view.dart';
+import 'package:flutter_application_testingfirebase/views/notes/new_note_view.dart';
+import 'package:flutter_application_testingfirebase/views/notes/notes_view.dart';
 import 'package:flutter_application_testingfirebase/views/register_view.dart';
 import 'package:flutter_application_testingfirebase/views/verify_email_view.dart';
 //import 'firebase_options.dart';
@@ -23,6 +24,7 @@ void main() {
           registerRoute: (context) => const RegisterView(),
           notesRoute: (context) => const NotesView(),
           verifyEmailRoute: (context) => const VerifyEmailView(),
+          newNoteRoute: (context) => const NewNoteView(),
         }
         //home: RegisterView(),
         //home: const RegisterView(),
@@ -56,7 +58,6 @@ class HomePage extends StatelessWidget {
               if (user != null) {
                 if (user.isEmailVerified) {
                   print('hello world');
-
                   return const NotesView();
                   //print('Email is verified.');
                 } else {
