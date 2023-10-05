@@ -39,7 +39,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar( 
         title: const Text(' Home'),
       ),
       // future builder is used to perform the asychronous functions and based on that function, it will update the UI of the app.
